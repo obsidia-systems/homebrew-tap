@@ -1,0 +1,37 @@
+name: Homebrew Tap CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate-formula:
+    name: Validate envlt on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
+      - name: Tap local repository
+        run: |
+          brew untap obsidia-systems/tap || true
+          brew tap --custom-remote obsidia-systems/tap "$GITHUB_WORKSPACE"
+
+      - name: Audit formula
+        run: brew audit --strict obsidia-systems/tap/envlt
+
+      - name: Install formula from source
+        run: brew install --build-from-source obsidia-systems/tap/envlt
+
+      - name: Run formula test
+        run: brew test obsidia-systems/tap/envlt
