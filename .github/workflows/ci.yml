@@ -19,13 +19,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Homebrew
-        uses: Homebrew/actions/setup-homebrew@master
+      - name: Ensure Homebrew is on PATH (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          echo "/home/linuxbrew/.linuxbrew/bin" >> "$GITHUB_PATH"
+          echo "/home/linuxbrew/.linuxbrew/sbin" >> "$GITHUB_PATH"
+
+      - name: Verify Homebrew
+        run: brew --version
 
       - name: Tap local repository
         run: |
-          brew untap obsidia-systems/tap || true
-          brew tap --custom-remote obsidia-systems/tap "$GITHUB_WORKSPACE"
+          TAP_DIR="$(brew --repository)/Library/Taps/obsidia-systems/homebrew-tap"
+          mkdir -p "$(dirname "$TAP_DIR")"
+          rm -rf "$TAP_DIR"
+          ln -s "$GITHUB_WORKSPACE" "$TAP_DIR"
 
       - name: Audit formula
         run: brew audit --strict obsidia-systems/tap/envlt
