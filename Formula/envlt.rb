@@ -1,8 +1,8 @@
 class Envlt < Formula
   desc "Local-first encrypted environment variable manager"
   homepage "https://github.com/obsidia-systems/envlt"
-  url "https://github.com/obsidia-systems/envlt/archive/refs/tags/v0.1.4.tar.gz"
-  sha256 "ee63c41beb6dd34b0393fb8ca984edb25ad63e6e091ab13966d14eb418b5c0dc"
+  url "https://github.com/obsidia-systems/envlt/archive/refs/tags/v0.1.5.tar.gz"
+  sha256 "712ccb3aa14dd49886dc61b372d5797c0eb13fe2bb2c1639ea446315418fbfba"
   license "MIT"
 
   depends_on "rust" => :build
